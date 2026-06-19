@@ -54,7 +54,7 @@ export default function Scene() {
           <Environment preset="night" />
 
           {/* Post processing — kept subtle and reliable */}
-          <EffectComposer disableNormalPass multisampling={0}>
+          <EffectComposer enableNormalPass={false} multisampling={0}>
             <Bloom
               luminanceThreshold={0.3}
               luminanceSmoothing={0.9}
