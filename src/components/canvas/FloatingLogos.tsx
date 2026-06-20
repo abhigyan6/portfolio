@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useState, useEffect } from "react";
 import { Float, Html } from "@react-three/drei";
 import * as THREE from "three";
 
@@ -87,7 +87,9 @@ const TOOLS: Omit<ToolBadge, "position" | "floatSpeed">[] = [
 ];
 
 export default function FloatingLogos({ count = 22 }: { count?: number }) {
-  const badges: ToolBadge[] = useMemo(() => {
+  const [badges, setBadges] = useState<ToolBadge[]>([]);
+
+  useEffect(() => {
     const result: ToolBadge[] = [];
     
     // We want to randomize the order of tools on every refresh
@@ -118,8 +120,11 @@ export default function FloatingLogos({ count = 22 }: { count?: number }) {
         floatSpeed: Math.random() * 0.35 + 0.1,
       });
     }
-    return result;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setBadges(result);
   }, [count]);
+
+  if (badges.length === 0) return null;
 
   return (
     <group>

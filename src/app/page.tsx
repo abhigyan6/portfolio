@@ -4,7 +4,6 @@ import { useState, useCallback } from "react";
 import dynamic from "next/dynamic";
 import Overlay from "@/components/Overlay";
 import Preloader from "@/components/ui/Preloader";
-import CustomCursor from "@/components/ui/CustomCursor";
 import SpotlightGlow from "@/components/ui/SpotlightGlow";
 import SmoothScroll from "@/components/ui/SmoothScroll";
 
@@ -25,8 +24,7 @@ export default function Home() {
       {/* Preloader — disappears after loading */}
       {!loaded && <Preloader onComplete={handlePreloaderComplete} />}
 
-      {/* Custom cursor & Mouse Spotlight */}
-      <CustomCursor />
+      {/* Mouse Spotlight */}
       <SpotlightGlow />
 
       {/* Smooth scroll wrapper */}

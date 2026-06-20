@@ -8,18 +8,18 @@ const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mon
 
 export const metadata: Metadata = {
   title: "Abhigyan Dwivedi — Designer & Developer",
-  description: "Elite Design Engineer bridging the gap between aesthetics and WebGL.",
+  description: "Creative Design Engineer bridging the gap between design and development.",
   openGraph: {
     title: "Abhigyan Dwivedi — Designer & Developer",
-    description: "Elite Design Engineer bridging the gap between aesthetics and WebGL.",
-    url: "https://abhigyan.design",
+    description: "Creative Design Engineer bridging the gap between design and development.",
+    url: "https://abhigyandwivedi.me",
     siteName: "Abhigyan Dwivedi Portfolio",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
     title: "Abhigyan Dwivedi — Designer & Developer",
-    description: "Elite Design Engineer bridging the gap between aesthetics and WebGL.",
+    description: "Creative Design Engineer bridging the gap between design and development.",
   },
   verification: {
     google: "qDEsjLciZdZVndgpmNunOxDlv7JWPJpnc1AhVbmo5RU",

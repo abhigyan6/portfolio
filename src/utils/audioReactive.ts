@@ -14,7 +14,7 @@ class AudioReactiveEngine {
     if (typeof window === "undefined") return;
     if (this.ctx) return;
 
-    const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+    const AudioContextClass = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
     if (!AudioContextClass) return;
 
     this.ctx = new AudioContextClass();
@@ -84,7 +84,7 @@ class AudioReactiveEngine {
     if (!this.analyser || !this.dataArray || !this.isPlaying) {
       return 0; // Return 0 intensity if off
     }
-    this.analyser.getByteFrequencyData(this.dataArray as any);
+    this.analyser.getByteFrequencyData(this.dataArray as unknown as Uint8Array<ArrayBuffer>);
     
     // Calculate average bass/mid intensity (0 to 1)
     let sum = 0;

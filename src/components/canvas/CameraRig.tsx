@@ -38,7 +38,7 @@ export default function CameraRig() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [camera]);
 
-  useFrame(() => {
+  useFrame((state) => {
     // Decay velocity smoothly
     scrollVelocity.current *= 0.92;
 
@@ -53,10 +53,10 @@ export default function CameraRig() {
     current.current.rotY += (target.current.rotY - current.current.rotY) * 0.05;
     current.current.rotZ += (targetRoll - current.current.rotZ) * 0.08;
 
-    camera.position.z = current.current.z;
-    camera.rotation.x = current.current.rotX;
-    camera.rotation.y = current.current.rotY;
-    camera.rotation.z = current.current.rotZ;
+    state.camera.position.z = current.current.z;
+    state.camera.rotation.x = current.current.rotX;
+    state.camera.rotation.y = current.current.rotY;
+    state.camera.rotation.z = current.current.rotZ;
   });
 
   return null;

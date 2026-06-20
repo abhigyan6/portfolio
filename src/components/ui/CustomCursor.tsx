@@ -32,6 +32,8 @@ export default function CustomCursor() {
       requestAnimationFrame(animateRing);
     };
 
+    let currentHoveredEl: Element | null = null;
+
     const handleHover = () => {
       playTick();
       ring.style.width = "60px";
@@ -55,29 +57,35 @@ export default function CustomCursor() {
     window.addEventListener("scroll", handleScroll, { passive: true });
     animateRing();
 
-    // Track hover on interactive elements
     const interactiveSelector = "a, button, .interactive-hover, h1";
-    
-    const interactiveEls = document.querySelectorAll(interactiveSelector);
-    interactiveEls.forEach((el) => {
-      el.addEventListener("mouseenter", handleHover);
-      el.addEventListener("mouseleave", handleUnhover);
-    });
 
-    // Re-observe for dynamically added elements
-    const observer = new MutationObserver(() => {
-      const els = document.querySelectorAll(interactiveSelector);
-      els.forEach((el) => {
-        el.addEventListener("mouseenter", handleHover);
-        el.addEventListener("mouseleave", handleUnhover);
-      });
-    });
-    observer.observe(document.body, { childList: true, subtree: true });
+    const handleMouseOver = (e: MouseEvent) => {
+      const target = (e.target as HTMLElement).closest(interactiveSelector);
+      if (target) {
+        if (currentHoveredEl !== target) {
+          currentHoveredEl = target;
+          handleHover();
+        }
+      }
+    };
+
+    const handleMouseOut = (e: MouseEvent) => {
+      const target = (e.target as HTMLElement).closest(interactiveSelector);
+      const relatedTarget = e.relatedTarget as HTMLElement;
+      if (target && (!relatedTarget || !relatedTarget.closest(interactiveSelector))) {
+        currentHoveredEl = null;
+        handleUnhover();
+      }
+    };
+
+    document.addEventListener("mouseover", handleMouseOver);
+    document.addEventListener("mouseout", handleMouseOut);
 
     return () => {
       window.removeEventListener("mousemove", moveCursor);
       window.removeEventListener("scroll", handleScroll);
-      observer.disconnect();
+      document.removeEventListener("mouseover", handleMouseOver);
+      document.removeEventListener("mouseout", handleMouseOut);
     };
   }, []);
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useMemo, useEffect } from "react";
+import { useRef, useMemo, useEffect, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { audioEngine } from "@/utils/audioReactive";
@@ -13,7 +13,10 @@ export default function Starfield({ count = 1500 }) {
   const dummy = useMemo(() => new THREE.Object3D(), []);
   
   // Store initial random positions and base speeds
-  const positions = useMemo(() => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [positions, setPositions] = useState<any[]>([]);
+
+  useEffect(() => {
     const pos = [];
     for (let i = 0; i < count; i++) {
       pos.push({
@@ -24,7 +27,8 @@ export default function Starfield({ count = 1500 }) {
         warpSpeed: Math.random() * 0.5 + 0.5,
       });
     }
-    return pos;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setPositions(pos);
   }, [count]);
 
   useEffect(() => {

@@ -2,7 +2,6 @@
 
 import { Suspense } from "react";
 import { Canvas } from "@react-three/fiber";
-import { Environment } from "@react-three/drei";
 import * as THREE from "three";
 import { EffectComposer, Bloom, Noise } from "@react-three/postprocessing";
 import { BlendFunction } from "postprocessing";
@@ -65,7 +64,7 @@ export default function Scene() {
     
     // 2. Detect Rendering Engine (Chromium is highly optimized for WebGL, others are not)
     // Chrome, Edge, Brave, Arc all use Chromium and expose window.chrome
-    const isChromium = /chrome|chromium|crios/i.test(navigator.userAgent) && !/edg\//i.test(navigator.userAgent);
+    const isChromium = /chrome|chromium|crios|edg/i.test(navigator.userAgent);
     
     // 3. Detect Hardware Cores (Requires >= 8 cores for high tier)
     const cores = navigator.hardwareConcurrency || 4;
@@ -74,10 +73,12 @@ export default function Scene() {
     // 4. Safari specific check (WebKit struggles with EffectComposer)
     const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
-    if (isMobile || isSafari || !isHighEndHardware) {
+    if (isMobile || isSafari || !isHighEndHardware || !isChromium) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setTier("low");
       console.info("[Performance Matrix] Hardware/Engine limits detected. Engaging 60fps lockdown mode.");
     } else {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setTier("high");
       console.info("[Performance Matrix] High-end Chromium desktop detected. Engaging God-Tier effects.");
     }

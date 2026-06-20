@@ -10,23 +10,10 @@ import CustomCursor from "./ui/CustomCursor";
 
 export default function Overlay() {
   useEffect(() => {
-    // LIMIT BREAK: The "Inspect Element" Trap (The Console Flex)
-    console.log("%cOh, you're looking for my source code? How cute.", "color: #ffffff; font-size: 18px; font-weight: bold; background: #000000; padding: 10px 20px; border-radius: 4px; font-family: monospace; border: 1px solid #333;");
-    console.log("%cYou are currently looking at a live feed of 60fps tensor math.\nGood luck copying this.", "color: #ff0055; font-size: 14px; font-family: monospace; padding-top: 10px; font-weight: bold;");
-    console.log("%cDrop me a line: abhigyanforwork@gmail.com", "color: #a0a0a0; font-size: 14px; font-family: monospace; padding-top: 10px;");
-
-    // The Intimidation Loop: Simulated WebGL Math Stream
-    const intv = setInterval(() => {
-      // Only log if console is open/active to prevent massive memory leaks, 
-      // but in standard JS we can't detect it, so we just log a lightweight string.
-      const rand1 = (Math.random() * 999).toFixed(4);
-      const rand2 = (Math.random() * 999).toFixed(4);
-      const rand3 = (Math.random() * 999).toFixed(4);
-      const rand4 = (Math.random() * 999).toFixed(4);
-      const output = `[WEBGL_PIPELINE] Tensor Compute_Z Matrix4x4 [ ${rand1}, ${rand2}, ${rand3}, ${rand4} ]`;
-      
-      console.log("%c" + output, "color: #333333; font-family: monospace; font-size: 10px;");
-    }, 2000); // Pulse every 2 seconds so it doesn't crash their browser, but keeps moving.
+    // Friendly Easter Egg
+    console.log("%cOh look, another developer inspecting my source code. 👀", "color: #ffffff; font-size: 18px; font-weight: bold; background: #000000; padding: 10px 20px; border-radius: 4px; font-family: monospace; border: 1px solid #333;");
+    console.log("%cHere to copy my 60fps locked WebGL math? Go ahead, I won't tell anyone.", "color: #a0a0a0; font-size: 14px; font-family: monospace; padding-top: 10px;");
+    console.log("%cIf you're going to steal it, at least hire me: abhigyanforwork@gmail.com", "color: #6366f1; font-size: 14px; font-weight: bold; font-family: monospace; padding-top: 10px;");
     // 0.0001% Detail 2: Dynamic Tab Title
     // When the user switches tabs, the site begs them to come back.
     const originalTitle = document.title || "Abhigyan Dwivedi — Designer & Developer";
@@ -57,7 +44,6 @@ export default function Overlay() {
     document.addEventListener("mouseover", handleMouseOver);
 
     return () => {
-      clearInterval(intv);
       window.removeEventListener("visibilitychange", handleVisibilityChange);
       document.removeEventListener("mouseover", handleMouseOver);
     };

@@ -7,12 +7,27 @@ import { audioEngine } from "@/utils/audioReactive";
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [audioPlaying, setAudioPlaying] = useState(false);
-
+  const [activeSection, setActiveSection] = useState("");
   const [toastVisible, setToastVisible] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 100);
+
+      // Section tracking
+      const sections = ["hero", "about", "projects", "contact"];
+      let current = "";
+      for (const section of sections) {
+        const el = document.getElementById(section);
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          // If the section's top is in the upper half of viewport, it's active
+          if (rect.top <= window.innerHeight / 2 && rect.bottom >= window.innerHeight / 2) {
+            current = section;
+          }
+        }
+      }
+      setActiveSection(current);
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
@@ -44,10 +59,13 @@ export default function Navbar() {
       <MagneticButton strength={15}>
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className="text-sm font-bold text-white tracking-tight"
+          className="text-sm font-bold text-white tracking-tight flex items-center gap-1 group"
           data-hover
         >
-          abhigyan<span className="text-neutral-600">.</span>
+          <span className="text-accent group-hover:-translate-x-1 transition-transform opacity-0 group-hover:opacity-100">&lt;</span>
+          abhigyan
+          <span className="text-accent group-hover:translate-x-1 transition-transform opacity-0 group-hover:opacity-100">/&gt;</span>
+          <span className="text-neutral-600 group-hover:opacity-0 transition-opacity absolute right-0">.</span>
         </button>
       </MagneticButton>
 
@@ -60,10 +78,15 @@ export default function Navbar() {
           <MagneticButton key={item.id} strength={10}>
             <button
               onClick={() => scrollTo(item.id)}
-              className="text-xs font-mono text-neutral-500 hover:text-white transition-colors uppercase tracking-widest hidden md:block"
+              className={`relative text-xs font-mono uppercase tracking-widest hidden md:block py-2 transition-colors ${
+                activeSection === item.id ? "text-white" : "text-neutral-500 hover:text-neutral-300"
+              }`}
               data-hover
             >
               {item.label}
+              {activeSection === item.id && (
+                <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-4 h-0.5 bg-accent rounded-full animate-fadeIn" />
+              )}
             </button>
           </MagneticButton>
         ))}
@@ -90,7 +113,7 @@ export default function Navbar() {
       >
         <div className="w-2 h-2 rounded-full bg-[#ff3366] animate-pulse flex-shrink-0" />
         <p className="text-[#a1a1aa] text-xs font-medium leading-relaxed font-mono">
-          <strong className="text-white">Performance Warning:</strong> Real-time Audio-WebGL shaders demand high hardware limits. You may experience frame drops.
+          <strong className="text-white">Performance Warning:</strong> Audio mode uses real-time WebGL effects. You may notice slight performance changes on some devices.
         </p>
       </div>
     </nav>

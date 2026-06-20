@@ -5,6 +5,10 @@
   --color-foreground: #e8e8ec;
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-jetbrains), ui-monospace, SFMono-Regular, monospace;
+  --color-accent: #6366f1; /* Indigo-500 */
+  --color-accent-glow: rgba(99, 102, 241, 0.15);
+  --color-accent-muted: rgba(99, 102, 241, 0.05);
+  --color-accent-border: rgba(99, 102, 241, 0.3);
 }
 
 :root {
@@ -75,6 +79,7 @@ body {
     background-clip: text;
     -webkit-text-fill-color: transparent;
     animation: textShimmer 4s linear infinite;
+    padding-bottom: 0.2em; /* Fixes WebKit clipping on descenders like 'g', 'y' */
   }
 
   .text-gradient {
@@ -82,6 +87,7 @@ body {
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
+    padding-bottom: 0.1em;
   }
 
   /* Bento Card */
@@ -131,7 +137,7 @@ body {
     inset: 0;
     background: radial-gradient(
       600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-      rgba(120, 119, 198, 0.08),
+      var(--color-accent-glow),
       transparent 40%
     );
     opacity: 0;
@@ -159,6 +165,28 @@ body {
   .tag:hover {
     border-color: rgba(255, 255, 255, 0.2);
     color: rgba(255, 255, 255, 0.8);
+  }
+
+  /* Utility classes */
+  .text-accent {
+    color: var(--color-accent);
+  }
+
+  .border-accent {
+    border-color: var(--color-accent-border);
+  }
+}
+
+/* ========== ACCESSIBILITY ========== */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .film-grain {
+    display: none !important;
   }
 }
 

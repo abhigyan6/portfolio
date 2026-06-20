@@ -1,15 +1,19 @@
 import type { NextConfig } from "next";
 
+const isProd = process.env.NODE_ENV === 'production';
+
 const ContentSecurityPolicy = `
   default-src 'self';
-  script-src 'self' 'unsafe-eval' 'unsafe-inline';
+  script-src 'self' 'unsafe-inline' ${!isProd ? "'unsafe-eval'" : ""};
   style-src 'self' 'unsafe-inline';
-  img-src 'self' blob: data:;
+  img-src 'self' blob: data: https://i.scdn.co https://is1-ssl.mzstatic.com https://img.youtube.com https://sgp.cloud.appwrite.io;
+  media-src 'self' https://audio-ssl.itunes.apple.com https://sgp.cloud.appwrite.io;
   font-src 'self' data:;
   object-src 'none';
   base-uri 'self';
   form-action 'self';
   frame-ancestors 'none';
+  ${isProd ? 'upgrade-insecure-requests;' : ''}
 `;
 
 const securityHeaders = [
@@ -17,11 +21,10 @@ const securityHeaders = [
     key: "X-DNS-Prefetch-Control",
     value: "on",
   },
-  // HSTS disabled for local dev because it breaks Safari localhost by forcing HTTPS
-  // {
-  //   key: "Strict-Transport-Security",
-  //   value: "max-age=63072000; includeSubDomains; preload",
-  // },
+  ...(isProd ? [{
+    key: "Strict-Transport-Security",
+    value: "max-age=63072000; includeSubDomains; preload",
+  }] : []),
   {
     key: "X-Content-Type-Options",
     value: "nosniff",
@@ -46,6 +49,14 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   poweredByHeader: false, // Prevents hackers from detecting Next.js via headers
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'sgp.cloud.appwrite.io',
+      },
+    ],
+  },
   async headers() {
     return [
       {

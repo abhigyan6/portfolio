@@ -4,15 +4,15 @@ import { useEffect, useRef, useState } from "react";
 
 const BOOT_SEQUENCE = [
   "[ OK ] Mounting System Architecture...",
-  "[ OK ] Injecting WebGL Memory Buffers...",
-  "[ OK ] Initializing ThreeJS Physics Engine...",
-  "[ OK ] Connecting to Audio-Reactive LFO...",
-  "[ OK ] Stabilizing Chromatic Aberration Lens...",
-  "[ OK ] Rendering Universal Parallax Grid...",
+  "[ OK ] Initializing WebGL Renderer...",
+  "[ OK ] Loading 3D Physics Engine...",
+  "[ OK ] Connecting Audio Engine...",
+  "[ OK ] Calibrating Visual Effects...",
+  "[ OK ] Rendering Starfield...",
   "[ OK ] Compiling Shaders...",
-  "WARN   Bypassing security protocols...",
-  "[ OK ] Decrypting Abhigyan Dwivedi...",
-  "ACCESS GRANTED."
+  "[ OK ] Loading Portfolio...",
+  "[ OK ] Welcome — Abhigyan Dwivedi",
+  "READY."
 ];
 
 export default function Preloader({ onComplete }: { onComplete: () => void }) {
@@ -68,7 +68,7 @@ export default function Preloader({ onComplete }: { onComplete: () => void }) {
         {logs.map((log, index) => (
           <div 
             key={index} 
-            className={`${log?.includes("WARN") ? "text-red-500" : log?.includes("ACCESS") ? "text-green-400 font-bold" : "text-neutral-500"} animate-pulse`}
+            className={`${log?.includes("WARN") ? "text-red-500" : log?.includes("READY.") ? "text-green-400 font-bold" : "text-neutral-500"} animate-pulse`}
           >
             {log}
           </div>
