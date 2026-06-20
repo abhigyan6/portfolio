@@ -8,6 +8,8 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [audioPlaying, setAudioPlaying] = useState(false);
 
+  const [toastVisible, setToastVisible] = useState(false);
+
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 100);
@@ -21,6 +23,12 @@ export default function Navbar() {
   };
 
   const toggleAudio = () => {
+    // Show warning every time audio is turned ON
+    if (!audioEngine.isPlaying) {
+      setToastVisible(true);
+      setTimeout(() => setToastVisible(false), 5000);
+    }
+
     audioEngine.toggle();
     setAudioPlaying(audioEngine.isPlaying);
   };
@@ -73,6 +81,17 @@ export default function Navbar() {
             Audio
           </button>
         </MagneticButton>
+      </div>
+
+      {/* Performance Warning Toast */}
+      <div 
+        className={`fixed bottom-8 right-8 z-[100] px-6 py-4 bg-[#0a0a0f]/90 backdrop-blur-xl border border-[#ff3366]/30 rounded-2xl shadow-[0_10px_40px_-10px_rgba(255,51,102,0.2)] transition-all duration-500 ease-out flex items-center gap-4 max-w-sm pointer-events-none
+        ${toastVisible ? "translate-y-0 opacity-100" : "translate-y-12 opacity-0"}`}
+      >
+        <div className="w-2 h-2 rounded-full bg-[#ff3366] animate-pulse flex-shrink-0" />
+        <p className="text-[#a1a1aa] text-xs font-medium leading-relaxed font-mono">
+          <strong className="text-white">Performance Warning:</strong> Real-time Audio-WebGL shaders demand high hardware limits. You may experience frame drops.
+        </p>
       </div>
     </nav>
   );
