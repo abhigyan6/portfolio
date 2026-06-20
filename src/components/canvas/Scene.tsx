@@ -61,7 +61,7 @@ export default function Scene() {
     <div className="fixed inset-0 z-0 bg-[#050508] overflow-hidden pointer-events-none">
       <Canvas
         camera={{ position: [0, 0, 15], fov: 45 }}
-        dpr={[1, 1.5]}
+        dpr={1}
         gl={{ antialias: false, alpha: false, powerPreference: "high-performance" }}
       >
         <Suspense fallback={null}>

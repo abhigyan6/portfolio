@@ -91,13 +91,13 @@ export default function CustomCursor() {
       {/* Inner dot */}
       <div
         ref={dotRef}
-        className="hidden md:block fixed top-0 left-0 w-2 h-2 rounded-full bg-white pointer-events-none z-[999] mix-blend-difference"
+        className="hidden md:block fixed top-0 left-0 w-2 h-2 rounded-full bg-white/80 pointer-events-none z-[999] shadow-[0_0_10px_rgba(255,255,255,0.5)]"
         style={{ transition: "none" }}
       />
       {/* Outer ring */}
       <div
         ref={ringRef}
-        className="hidden md:flex fixed top-0 left-0 w-10 h-10 rounded-full pointer-events-none z-[999] mix-blend-difference items-center justify-center"
+        className="hidden md:flex fixed top-0 left-0 w-10 h-10 rounded-full pointer-events-none z-[999] items-center justify-center backdrop-blur-[2px] bg-white/5"
         style={{
           transition: "width 0.3s ease, height 0.3s ease, border-color 0.3s ease",
         }}
