@@ -134,6 +134,7 @@ export default function FloatingLogos({ count = 22 }: { count?: number }) {
           <Html
             center
             distanceFactor={10}
+            transform
             style={{ pointerEvents: "none", userSelect: "none" }}
           >
             <div
@@ -143,9 +144,7 @@ export default function FloatingLogos({ count = 22 }: { count?: number }) {
                 gap: "14px",
                 padding: "16px 32px",
                 borderRadius: "24px",
-                background: "rgba(255, 255, 255, 0.05)",
-                backdropFilter: "blur(16px)",
-                WebkitBackdropFilter: "blur(16px)",
+                background: "rgba(15, 15, 20, 0.95)",
                 border: `1px solid ${badge.color}50`,
                 whiteSpace: "nowrap",
                 fontFamily: "system-ui, sans-serif",

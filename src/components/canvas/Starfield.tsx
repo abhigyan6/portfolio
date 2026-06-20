@@ -143,7 +143,6 @@ export default function Starfield({ count = 1500 }) {
           transparent 
           opacity={0.4} 
           depthWrite={false}
-          blending={THREE.AdditiveBlending}
         />
       </instancedMesh>
     </group>

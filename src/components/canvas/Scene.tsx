@@ -10,7 +10,7 @@ import CameraRig from "./CameraRig";
 import FloatingLogos from "./FloatingLogos";
 import Starfield from "./Starfield";
 
-import { useRef, useEffect, useMemo } from "react";
+import { useRef, useEffect, useMemo, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 import { ChromaticAberration } from "@react-three/postprocessing";
 
@@ -57,6 +57,32 @@ function DynamicEffects() {
 }
 
 export default function Scene() {
+  const [tier, setTier] = useState<"high" | "low">("high");
+
+  useEffect(() => {
+    // 1. Detect Mobile Devices (Instant downgrade)
+    const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    
+    // 2. Detect Rendering Engine (Chromium is highly optimized for WebGL, others are not)
+    // Chrome, Edge, Brave, Arc all use Chromium and expose window.chrome
+    const isChromium = /chrome|chromium|crios/i.test(navigator.userAgent) && !/edg\//i.test(navigator.userAgent);
+    
+    // 3. Detect Hardware Cores (Requires >= 8 cores for high tier)
+    const cores = navigator.hardwareConcurrency || 4;
+    const isHighEndHardware = cores >= 8;
+
+    // 4. Safari specific check (WebKit struggles with EffectComposer)
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+    if (isMobile || isSafari || !isHighEndHardware) {
+      setTier("low");
+      console.info("[Performance Matrix] Hardware/Engine limits detected. Engaging 60fps lockdown mode.");
+    } else {
+      setTier("high");
+      console.info("[Performance Matrix] High-end Chromium desktop detected. Engaging God-Tier effects.");
+    }
+  }, []);
+
   return (
     <div className="fixed inset-0 z-0 bg-[#050508] overflow-hidden pointer-events-none">
       <Canvas
@@ -69,7 +95,8 @@ export default function Scene() {
           <FloatingLogos count={8} />
           <CameraRig />
           
-          <DynamicEffects />
+          {/* Dynamic Render Branching: */}
+          {tier === "high" && <DynamicEffects />}
         </Suspense>
       </Canvas>
     </div>
