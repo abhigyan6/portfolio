@@ -61,12 +61,12 @@ export default function Scene() {
     <div className="fixed inset-0 z-0 bg-[#050508] overflow-hidden pointer-events-none">
       <Canvas
         camera={{ position: [0, 0, 15], fov: 45 }}
-        dpr={[1, 2]}
-        gl={{ antialias: false, alpha: false }}
+        dpr={[1, 1.5]}
+        gl={{ antialias: false, alpha: false, powerPreference: "high-performance" }}
       >
         <Suspense fallback={null}>
-          <Starfield count={2000} />
-          <FloatingLogos count={22} />
+          <Starfield count={1500} />
+          <FloatingLogos count={8} />
           <CameraRig />
           
           <DynamicEffects />
