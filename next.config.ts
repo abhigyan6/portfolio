@@ -8,6 +8,7 @@ const ContentSecurityPolicy = `
   style-src 'self' 'unsafe-inline';
   img-src 'self' blob: data: https://i.scdn.co https://is1-ssl.mzstatic.com https://img.youtube.com https://sgp.cloud.appwrite.io;
   media-src 'self' https://audio-ssl.itunes.apple.com https://sgp.cloud.appwrite.io;
+  connect-src 'self' https://sgp.cloud.appwrite.io;
   font-src 'self' data:;
   object-src 'none';
   base-uri 'self';

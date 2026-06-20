@@ -20,7 +20,7 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="relative w-full min-h-screen">
+    <main className="relative w-full min-h-screen hide-cursor">
       {/* Preloader — disappears after loading */}
       {!loaded && <Preloader onComplete={handlePreloaderComplete} />}
 

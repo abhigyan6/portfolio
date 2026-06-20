@@ -1,17 +1,39 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-
-const ROLES = [
-  "Product Designer",
-  "Frontend Developer",
-  "Creative Engineer"
-];
+import { databases } from "@/lib/appwrite";
+import { Query } from "appwrite";
 
 export default function Hero() {
   const name = "Abhigyan";
+  const [roles, setRoles] = useState(["Product Designer", "Frontend Developer", "Creative Engineer"]);
+  const [tagline, setTagline] = useState("Building elegant systems. Designing beautiful experiences.");
+  const [resumeUrl, setResumeUrl] = useState("#");
   const [displayText, setDisplayText] = useState(name.split(""));
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    async function fetchContent() {
+      try {
+        const response = await databases.listDocuments("portfolio_db", "content_blocks", [
+          Query.equal("key", ["hero_roles", "hero_tagline", "resume_url"])
+        ]);
+        
+        response.documents.forEach((doc) => {
+          if (doc.key === "hero_roles") {
+            setRoles(JSON.parse(doc.value));
+          } else if (doc.key === "hero_tagline") {
+            setTagline(doc.value);
+          } else if (doc.key === "resume_url") {
+            setResumeUrl(doc.value);
+          }
+        });
+      } catch (e) {
+        console.error("Failed to load hero content", e);
+      }
+    }
+    fetchContent();
+  }, []);
 
   const handleMouseEnter = () => {
     if (intervalRef.current) clearInterval(intervalRef.current);
@@ -38,11 +60,12 @@ export default function Hero() {
   const [roleIndex, setRoleIndex] = useState(0);
 
   useEffect(() => {
+    if (roles.length === 0) return;
     const roleInterval = setInterval(() => {
-      setRoleIndex((prev) => (prev + 1) % ROLES.length);
+      setRoleIndex((prev) => (prev + 1) % roles.length);
     }, 3000);
     return () => clearInterval(roleInterval);
-  }, []);
+  }, [roles]);
 
   return (
     <section id="hero" className="min-h-screen w-full flex flex-col items-center justify-center relative z-10 px-6 overflow-hidden pt-20">
@@ -82,7 +105,7 @@ export default function Hero() {
           style={{ animation: "fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.6s forwards" }}
         >
           <div className="relative">
-            {ROLES.map((role, idx) => (
+            {roles.map((role, idx) => (
               <div
                 key={role}
                 className="absolute top-0 left-1/2 -translate-x-1/2 whitespace-nowrap transition-all duration-500 ease-in-out"
@@ -102,9 +125,28 @@ export default function Hero() {
           className="mt-8 max-w-2xl mx-auto opacity-0"
           style={{ animation: "fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.9s forwards" }}
         >
-          <p className="text-xl md:text-3xl text-neutral-200 font-medium tracking-tight">
-            Building elegant systems. Designing beautiful experiences.
+          <p className="text-xl md:text-3xl text-neutral-200 font-medium tracking-tight mb-8">
+            {tagline}
           </p>
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 w-full sm:w-auto relative z-20">
+            <a 
+              href="#projects"
+              className="w-full sm:w-auto px-8 py-4 bg-white text-black font-semibold rounded-full hover:scale-105 transition-transform text-center"
+            >
+              View Work
+            </a>
+            <a 
+              href={resumeUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="w-full sm:w-auto px-8 py-4 border border-white/20 text-white rounded-full hover:bg-white/5 transition-colors flex items-center justify-center gap-2 group"
+            >
+              Resume
+              <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
+            </a>
+          </div>
         </div>
 
         {/* Scroll indicator & Socials */}

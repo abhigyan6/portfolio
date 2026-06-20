@@ -15,7 +15,7 @@
   color-scheme: dark;
 }
 
-* {
+.hide-cursor * {
   cursor: none !important;
 }
 

@@ -1,15 +1,16 @@
-import { Client, Storage } from 'appwrite';
-
-const client = new Client();
+import { Client, Account, Databases, Storage, ID } from 'appwrite';
 
 const endpoint = process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT || 'https://sgp.cloud.appwrite.io/v1';
 const projectId = process.env.NEXT_PUBLIC_APPWRITE_PROJECT || '69e0e2ae001c036d3054';
 
-client
-  .setEndpoint(endpoint)
-  .setProject(projectId);
+const client = new Client()
+    .setEndpoint(endpoint)
+    .setProject(projectId);
 
+export const account = new Account(client);
+export const databases = new Databases(client);
 export const storage = new Storage(client);
+export { ID };
 
 /**
  * Returns the URL to preview an audio file from Appwrite Storage.
