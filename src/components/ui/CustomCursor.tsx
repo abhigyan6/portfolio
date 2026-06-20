@@ -1,10 +1,12 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { playTick } from "@/utils/sound";
 
 export default function CustomCursor() {
   const dotRef = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
+  const [scrollProgress, setScrollProgress] = useState(0);
 
   useEffect(() => {
     const dot = dotRef.current;
@@ -31,6 +33,7 @@ export default function CustomCursor() {
     };
 
     const handleHover = () => {
+      playTick();
       ring.style.width = "60px";
       ring.style.height = "60px";
       ring.style.borderColor = "rgba(255,255,255,0.6)";
@@ -39,14 +42,23 @@ export default function CustomCursor() {
     const handleUnhover = () => {
       ring.style.width = "40px";
       ring.style.height = "40px";
-      ring.style.borderColor = "rgba(255,255,255,0.25)";
+      ring.style.borderColor = "transparent"; // Hide border because SVG circle takes over
+    };
+
+    const handleScroll = () => {
+      const totalScroll = document.body.scrollHeight - window.innerHeight;
+      const currentScroll = window.scrollY;
+      setScrollProgress(currentScroll / totalScroll);
     };
 
     window.addEventListener("mousemove", moveCursor);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     animateRing();
 
     // Track hover on interactive elements
-    const interactiveEls = document.querySelectorAll("a, button, [data-hover]");
+    const interactiveSelector = "a, button, .interactive-hover, h1";
+    
+    const interactiveEls = document.querySelectorAll(interactiveSelector);
     interactiveEls.forEach((el) => {
       el.addEventListener("mouseenter", handleHover);
       el.addEventListener("mouseleave", handleUnhover);
@@ -54,7 +66,7 @@ export default function CustomCursor() {
 
     // Re-observe for dynamically added elements
     const observer = new MutationObserver(() => {
-      const els = document.querySelectorAll("a, button, [data-hover]");
+      const els = document.querySelectorAll(interactiveSelector);
       els.forEach((el) => {
         el.addEventListener("mouseenter", handleHover);
         el.addEventListener("mouseleave", handleUnhover);
@@ -64,27 +76,57 @@ export default function CustomCursor() {
 
     return () => {
       window.removeEventListener("mousemove", moveCursor);
+      window.removeEventListener("scroll", handleScroll);
       observer.disconnect();
     };
   }, []);
+
+  // Calculate SVG stroke offset based on scroll progress
+  // Circumference of a circle with r=18 is 2 * PI * 18 = 113.1
+  const circumference = 113.1;
+  const strokeDashoffset = circumference - scrollProgress * circumference;
 
   return (
     <>
       {/* Inner dot */}
       <div
         ref={dotRef}
-        className="fixed top-0 left-0 w-2 h-2 rounded-full bg-white pointer-events-none z-[999] mix-blend-difference"
+        className="hidden md:block fixed top-0 left-0 w-2 h-2 rounded-full bg-white pointer-events-none z-[999] mix-blend-difference"
         style={{ transition: "none" }}
       />
       {/* Outer ring */}
       <div
         ref={ringRef}
-        className="fixed top-0 left-0 w-10 h-10 rounded-full border-2 pointer-events-none z-[999] mix-blend-difference"
+        className="hidden md:flex fixed top-0 left-0 w-10 h-10 rounded-full pointer-events-none z-[999] mix-blend-difference items-center justify-center"
         style={{
-          borderColor: "rgba(255,255,255,0.25)",
           transition: "width 0.3s ease, height 0.3s ease, border-color 0.3s ease",
         }}
-      />
+      >
+        <svg className="absolute w-full h-full -rotate-90" viewBox="0 0 40 40">
+          {/* Background track */}
+          <circle
+            cx="20"
+            cy="20"
+            r="18"
+            fill="none"
+            stroke="rgba(255,255,255,0.25)"
+            strokeWidth="1.5"
+          />
+          {/* Progress fill */}
+          <circle
+            cx="20"
+            cy="20"
+            r="18"
+            fill="none"
+            stroke="white"
+            strokeWidth="1.5"
+            strokeDasharray={circumference}
+            strokeDashoffset={strokeDashoffset}
+            className="transition-all duration-150 ease-out"
+            strokeLinecap="round"
+          />
+        </svg>
+      </div>
     </>
   );
 }

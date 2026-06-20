@@ -1,10 +1,11 @@
 "use client";
 
 import ScrollReveal from "../ui/ScrollReveal";
+import TiltCard from "../ui/TiltCard";
 
 export default function About() {
-  const designSkills = ["UI/UX Design", "Figma", "Wireframing", "Design Systems", "Canva", "Spline 3D", "Blender", "Branding", "Typography", "Color Theory"];
-  const devSkills = ["HTML5", "CSS3", "JavaScript", "React.js", "Tailwind CSS", "Responsive Design", "Accessibility"];
+  const designSkills = ["Product Design", "Design Systems", "Interaction Design", "Figma", "Spline 3D", "Prototyping", "User Research"];
+  const devSkills = ["React", "Next.js", "TypeScript", "Three.js", "WebGL", "Tailwind CSS", "Framer Motion"];
 
   return (
     <section className="min-h-screen w-full py-32 flex flex-col items-center relative z-10 px-6" id="about">
@@ -23,82 +24,78 @@ export default function About() {
 
           {/* Main Bio */}
           <ScrollReveal className="md:col-span-8" delay={100}>
-            <div className="bento-card p-8 md:p-12 h-full flex flex-col justify-center hover:-translate-y-1 hover:shadow-xl hover:shadow-white/5 transition-all duration-500">
-              <h3 className="text-3xl md:text-4xl font-bold mb-8 text-white leading-tight">
-                Designing and building<br />
-                <span className="text-gradient">digital experiences</span> that matter.
+            <TiltCard className="bento-card p-8 md:p-12 h-full flex flex-col justify-center">
+              <h3 className="text-3xl md:text-4xl font-bold mb-8 text-white leading-tight tracking-tight">
+                Bridging the gap between<br />
+                <span className="text-gradient">relentless design</span> and rigorous engineering.
               </h3>
-              <div className="text-neutral-200 space-y-4 text-base leading-relaxed font-medium">
+              <div className="text-neutral-300 space-y-6 text-lg leading-relaxed font-medium">
                 <p>
-                  I&apos;m a Computer Science student at LNCTE College with a sharp focus on UI/UX Design, Graphic Design, and Frontend Development. My approach is rooted in design thinking — solving complex problems through intuitive, visually compelling interfaces.
+                  I don&apos;t just design interfaces in Figma; I build the physics, interactions, and production-ready code that brings them to life.
                 </p>
                 <p>
-                  I&apos;ve led UI design for the LNUniverse website, worked as a UI/UX Designer with E-Cell LNCTS, and crafted complete visual identities for startups, hackathons, and community events — from wireframes to final marketing assets.
+                  Specializing in 0-to-1 product design and creative frontend architecture, I transform complex technical requirements into tactile, high-performance digital experiences.
                 </p>
                 <p>
-                  I don&apos;t just design interfaces — I build them. With HTML, CSS, JavaScript, and React.js, I bridge the gap between design and engineering.
+                  Currently seeking Product Design and Frontend Internships for 2026. Let&apos;s build something extraordinary.
                 </p>
               </div>
-            </div>
+            </TiltCard>
           </ScrollReveal>
 
           {/* Experience */}
           <ScrollReveal className="md:col-span-4" delay={200}>
-            <div className="bento-card p-8 h-full flex flex-col justify-between hover:-translate-y-1 hover:shadow-xl hover:shadow-white/5 transition-all duration-500">
-              <h4 className="text-xs font-mono text-neutral-300 uppercase tracking-widest mb-8">Experience</h4>
+            <TiltCard className="bento-card p-8 h-full flex flex-col justify-between">
+              <h4 className="text-xs font-mono text-neutral-500 uppercase tracking-widest mb-8">Selected Experience</h4>
               <div className="space-y-6">
                 <div>
-                  <p className="text-white font-semibold">UI/UX Designer</p>
-                  <p className="text-neutral-300 text-sm">E-Cell LNCTS</p>
+                  <p className="text-white font-semibold tracking-tight">UI/UX Designer</p>
+                  <p className="text-neutral-400 text-sm">E-Cell LNCTS</p>
                 </div>
                 <div>
-                  <p className="text-white font-semibold">UI Designer</p>
-                  <p className="text-neutral-300 text-sm">LNUniverse Website</p>
+                  <p className="text-white font-semibold tracking-tight">Lead UI Designer</p>
+                  <p className="text-neutral-400 text-sm">LNUniverse Platform</p>
                 </div>
                 <div>
-                  <p className="text-white font-semibold">Visual Designer</p>
-                  <p className="text-neutral-300 text-sm">Event Branding & Campaigns</p>
-                </div>
-                <div>
-                  <p className="text-white font-semibold">Community Participant</p>
-                  <p className="text-neutral-300 text-sm">Google Cloud & Tech Initiatives</p>
+                  <p className="text-white font-semibold tracking-tight">Visual Designer</p>
+                  <p className="text-neutral-400 text-sm">Event Branding & Campaigns</p>
                 </div>
               </div>
-            </div>
+            </TiltCard>
           </ScrollReveal>
 
           {/* Design Skills */}
           <ScrollReveal className="md:col-span-5" delay={300}>
-            <div className="bento-card p-8 h-full hover:-translate-y-1 hover:shadow-xl hover:shadow-white/5 transition-all duration-500">
-              <h4 className="text-xs font-mono text-neutral-300 uppercase tracking-widest mb-6">Design</h4>
+            <TiltCard className="bento-card p-8 h-full">
+              <h4 className="text-xs font-mono text-neutral-500 uppercase tracking-widest mb-6">Design</h4>
               <div className="flex flex-wrap gap-2">
                 {designSkills.map((s) => (
                   <span key={s} className="tag">{s}</span>
                 ))}
               </div>
-            </div>
+            </TiltCard>
           </ScrollReveal>
 
           {/* Dev Skills */}
           <ScrollReveal className="md:col-span-4" delay={400}>
-            <div className="bento-card p-8 h-full hover:-translate-y-1 hover:shadow-xl hover:shadow-white/5 transition-all duration-500">
-              <h4 className="text-xs font-mono text-neutral-300 uppercase tracking-widest mb-6">Engineering</h4>
+            <TiltCard className="bento-card p-8 h-full">
+              <h4 className="text-xs font-mono text-neutral-500 uppercase tracking-widest mb-6">Engineering</h4>
               <div className="flex flex-wrap gap-2">
                 {devSkills.map((s) => (
                   <span key={s} className="tag">{s}</span>
                 ))}
               </div>
-            </div>
+            </TiltCard>
           </ScrollReveal>
 
           {/* Goal */}
           <ScrollReveal className="md:col-span-3" delay={500}>
-            <div className="bento-card p-8 h-full flex flex-col justify-center hover:-translate-y-1 hover:shadow-xl hover:shadow-white/5 transition-all duration-500">
-              <h4 className="text-xs font-mono text-neutral-300 uppercase tracking-widest mb-4">Goal</h4>
+            <TiltCard className="bento-card p-8 h-full flex flex-col justify-center">
+              <h4 className="text-xs font-mono text-neutral-500 uppercase tracking-widest mb-4">Current Focus</h4>
               <p className="text-neutral-200 text-sm leading-relaxed font-medium">
-                To become a Product Designer and Frontend Developer — designing and building impactful digital products from research to production.
+                Architecting high-performance React applications, exploring WebGL physics, and pushing the boundaries of interaction design.
               </p>
-            </div>
+            </TiltCard>
           </ScrollReveal>
 
         </div>

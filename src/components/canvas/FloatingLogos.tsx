@@ -89,15 +89,32 @@ const TOOLS: Omit<ToolBadge, "position" | "floatSpeed">[] = [
 export default function FloatingLogos({ count = 22 }: { count?: number }) {
   const badges: ToolBadge[] = useMemo(() => {
     const result: ToolBadge[] = [];
+    
+    // We want to randomize the order of tools on every refresh
+    const shuffledTools = [...TOOLS].sort(() => Math.random() - 0.5);
+
     for (let i = 0; i < count; i++) {
-      const tool = TOOLS[i % TOOLS.length];
+      const tool = shuffledTools[i % shuffledTools.length];
+      
+      // Distribute evenly along the Z axis from z=10 (front) down to z=-30 (deep)
+      // This creates the "deep dive" effect as the camera scrolls down to z=-20
+      const zBase = 10 - (i * (40 / count));
+      const zJitter = (Math.random() - 0.5) * 2;
+      const z = zBase + zJitter;
+
+      // Pick a random angle and radius to scatter around the center
+      const angle = Math.random() * Math.PI * 2;
+      
+      // Radius between 6 and 20 guarantees a keep-out zone right in the middle 
+      // (avoiding overlap with the "Abhigyan" hero text) while spreading them wide
+      const radius = 6 + Math.random() * 14;
+
+      const x = Math.cos(angle) * radius;
+      const y = Math.sin(angle) * radius;
+
       result.push({
         ...tool,
-        position: new THREE.Vector3(
-          (Math.random() - 0.5) * 40,
-          (Math.random() - 0.5) * 35,
-          (Math.random() - 0.5) * 40 - 5
-        ),
+        position: new THREE.Vector3(x, y, z),
         floatSpeed: Math.random() * 0.35 + 0.1,
       });
     }

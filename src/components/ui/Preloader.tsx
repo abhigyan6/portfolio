@@ -2,32 +2,56 @@
 
 import { useEffect, useRef, useState } from "react";
 
+const BOOT_SEQUENCE = [
+  "[ OK ] Mounting System Architecture...",
+  "[ OK ] Injecting WebGL Memory Buffers...",
+  "[ OK ] Initializing ThreeJS Physics Engine...",
+  "[ OK ] Connecting to Audio-Reactive LFO...",
+  "[ OK ] Stabilizing Chromatic Aberration Lens...",
+  "[ OK ] Rendering Universal Parallax Grid...",
+  "[ OK ] Compiling Shaders...",
+  "WARN   Bypassing security protocols...",
+  "[ OK ] Decrypting Abhigyan Dwivedi...",
+  "ACCESS GRANTED."
+];
+
 export default function Preloader({ onComplete }: { onComplete: () => void }) {
-  const [progress, setProgress] = useState(0);
+  const [logs, setLogs] = useState<string[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    let current = 0;
+    let currentIndex = 0;
+    
     const interval = setInterval(() => {
-      current += Math.floor(Math.random() * 8) + 2;
-      if (current >= 100) {
-        current = 100;
+      if (currentIndex >= BOOT_SEQUENCE.length) {
         clearInterval(interval);
+        return;
+      }
 
-        // Fade out preloader after a brief pause
+      const nextLog = BOOT_SEQUENCE[currentIndex];
+      if (nextLog) {
+        setLogs((prev) => [...prev, nextLog]);
+      }
+      
+      currentIndex++;
+
+      if (currentIndex >= BOOT_SEQUENCE.length) {
+        clearInterval(interval);
+        
+        // Pause on ACCESS GRANTED, then violently shatter/fade out
         setTimeout(() => {
           if (containerRef.current) {
-            containerRef.current.style.transform = "translateY(-100%)";
+            containerRef.current.style.transform = "scale(1.1)";
             containerRef.current.style.opacity = "0";
+            containerRef.current.style.filter = "blur(10px) brightness(2)";
           }
           // Remove from DOM after animation
           setTimeout(() => {
             onComplete();
           }, 800);
-        }, 300);
+        }, 600);
       }
-      setProgress(current);
-    }, 60);
+    }, 120); // Fast firing terminal
 
     return () => clearInterval(interval);
   }, [onComplete]);
@@ -35,25 +59,24 @@ export default function Preloader({ onComplete }: { onComplete: () => void }) {
   return (
     <div
       ref={containerRef}
-      className="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-[#050508]"
+      className="fixed inset-0 z-[9999] flex flex-col justify-end p-8 md:p-12 bg-[#000000] overflow-hidden"
       style={{
-        transition: "transform 1s cubic-bezier(0.76, 0, 0.24, 1), opacity 0.8s ease",
+        transition: "all 0.8s cubic-bezier(0.76, 0, 0.24, 1)",
       }}
     >
-      {/* Progress number */}
-      <div className="text-[20vw] md:text-[15vw] font-black tracking-tighter text-white leading-none select-none">
-        {progress}
-      </div>
-
-      {/* Progress bar */}
-      <div className="w-48 h-[1px] bg-neutral-800 mt-8 overflow-hidden">
-        <div
-          className="h-full bg-white"
-          style={{
-            width: `${progress}%`,
-            transition: "width 0.15s ease",
-          }}
-        />
+      <div className="flex flex-col gap-2 font-mono text-xs md:text-sm tracking-widest uppercase">
+        {logs.map((log, index) => (
+          <div 
+            key={index} 
+            className={`${log?.includes("WARN") ? "text-red-500" : log?.includes("ACCESS") ? "text-green-400 font-bold" : "text-neutral-500"} animate-pulse`}
+          >
+            {log}
+          </div>
+        ))}
+        {/* Blinking cursor */}
+        {logs.length < BOOT_SEQUENCE.length && (
+          <div className="w-3 h-4 bg-white animate-ping mt-1" />
+        )}
       </div>
     </div>
   );

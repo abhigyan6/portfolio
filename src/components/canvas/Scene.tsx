@@ -2,71 +2,74 @@
 
 import { Suspense } from "react";
 import { Canvas } from "@react-three/fiber";
-import { Environment, Stars } from "@react-three/drei";
+import { Environment } from "@react-three/drei";
+import * as THREE from "three";
 import { EffectComposer, Bloom, Noise } from "@react-three/postprocessing";
 import { BlendFunction } from "postprocessing";
 import CameraRig from "./CameraRig";
-import AmbientParticles from "./AmbientParticles";
 import FloatingLogos from "./FloatingLogos";
-import WarpLines from "./WarpLines";
+import Starfield from "./Starfield";
+
+import { useRef, useEffect, useMemo } from "react";
+import { useFrame } from "@react-three/fiber";
+import { ChromaticAberration } from "@react-three/postprocessing";
+
+import { audioEngine } from "@/utils/audioReactive";
+
+function DynamicEffects() {
+  const scrollVelocity = useRef(0);
+  const lastScrollY = useRef(0);
+  
+  // Memoize the Vector2 so it persists and we can mutate it directly
+  const offset = useMemo(() => new THREE.Vector2(0, 0), []);
+
+  useEffect(() => {
+    lastScrollY.current = window.scrollY;
+    const handleScroll = () => {
+      const delta = window.scrollY - lastScrollY.current;
+      scrollVelocity.current = delta;
+      lastScrollY.current = window.scrollY;
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useFrame(() => {
+    scrollVelocity.current *= 0.9;
+    
+    const audioIntensity = audioEngine.getFrequencyData();
+    const scrollIntensity = Math.min(Math.abs(scrollVelocity.current) * 0.00015, 0.03);
+    
+    // Combine physical scroll speed with audio frequency pulses
+    const finalIntensity = scrollIntensity + (audioIntensity * 0.015);
+    
+    // Mutate the memoized Vector2. The shader reads this memory reference directly.
+    offset.set(finalIntensity, finalIntensity);
+  });
+
+  return (
+    <EffectComposer enableNormalPass={false} multisampling={0}>
+      <Bloom luminanceThreshold={0.3} luminanceSmoothing={0.9} intensity={0.6} mipmapBlur />
+      <Noise premultiply blendFunction={BlendFunction.SCREEN} opacity={0.12} />
+      <ChromaticAberration blendFunction={BlendFunction.NORMAL} offset={offset} />
+    </EffectComposer>
+  );
+}
 
 export default function Scene() {
   return (
-    <div className="fixed inset-0 z-0">
+    <div className="fixed inset-0 z-0 bg-[#050508] overflow-hidden pointer-events-none">
       <Canvas
-        camera={{ position: [0, 0, 12], fov: 50 }}
-        gl={{ antialias: true, alpha: false }}
-        dpr={[1, 1.5]}
+        camera={{ position: [0, 0, 15], fov: 45 }}
+        dpr={[1, 2]}
+        gl={{ antialias: false, alpha: false }}
       >
-        <color attach="background" args={["#050508"]} />
-
         <Suspense fallback={null}>
-          {/* Stars field */}
-          <Stars
-            radius={80}
-            depth={60}
-            count={4000}
-            factor={3}
-            saturation={0}
-            fade
-            speed={0.8}
-          />
-
-          {/* Dust particles */}
-          <AmbientParticles count={1200} />
-
-          {/* Lighting */}
-          <ambientLight intensity={0.3} />
-          <directionalLight position={[10, 10, 5]} intensity={1.5} color="#ffffff" />
-          <pointLight position={[-15, -10, -15]} intensity={4} color="#7c3aed" distance={60} />
-          <pointLight position={[15, 10, -15]} intensity={3} color="#2563eb" distance={60} />
-
-          {/* Hyperspace lines on fast scroll */}
-          <WarpLines />
-
-          {/* Floating tool/software logo badges */}
+          <Starfield count={2000} />
           <FloatingLogos count={22} />
-
-          {/* Camera scroll controller */}
           <CameraRig />
-
-          {/* Environment for metallic reflections */}
-          <Environment preset="night" />
-
-          {/* Post processing — kept subtle and reliable */}
-          <EffectComposer enableNormalPass={false} multisampling={0}>
-            <Bloom
-              luminanceThreshold={0.3}
-              luminanceSmoothing={0.9}
-              intensity={0.6}
-              mipmapBlur
-            />
-            <Noise
-              premultiply
-              blendFunction={BlendFunction.SCREEN}
-              opacity={0.12}
-            />
-          </EffectComposer>
+          
+          <DynamicEffects />
         </Suspense>
       </Canvas>
     </div>

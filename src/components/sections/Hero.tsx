@@ -1,32 +1,73 @@
+"use client";
+
+import { useRef, useState } from "react";
+
 export default function Hero() {
+  const name = "Abhigyan";
+  const [displayText, setDisplayText] = useState(name.split(""));
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  const handleMouseEnter = () => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    let iteration = 0;
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*";
+    
+    intervalRef.current = setInterval(() => {
+      setDisplayText((prev) =>
+        prev.map((letter, index) => {
+          if (index < iteration) {
+            return name[index];
+          }
+          return chars[Math.floor(Math.random() * chars.length)];
+        })
+      );
+
+      if (iteration >= name.length) {
+        clearInterval(intervalRef.current!);
+      }
+      iteration += 1 / 3; // slow down reveal
+    }, 30);
+  };
+
   return (
-    <section className="h-screen w-full flex flex-col items-center justify-center relative z-10 px-6">
-      <div className="text-center max-w-5xl mx-auto">
+    <section className="h-screen w-full flex flex-col items-center justify-center relative z-10 px-6 overflow-hidden">
+      <div className="text-center max-w-5xl mx-auto -mt-20"> {/* Negative margin to pull it up and reduce empty space */}
         {/* Name — massive and immediate */}
-        <div className="mb-4">
-          <h1
-            className="text-8xl md:text-[12rem] font-extrabold tracking-tighter leading-none pb-4 text-gradient-animated opacity-0"
-            style={{ animation: "fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards" }}
+        <div className="mb-2" style={{ perspective: "1000px" }}>
+          <h1 
+            className="text-[15vw] sm:text-[12vw] md:text-[12rem] font-extrabold tracking-tighter leading-none pb-4 flex justify-center cursor-default"
+            onMouseEnter={handleMouseEnter}
           >
-            Abhigyan
+            {displayText.map((char, i) => (
+              <span 
+                key={i} 
+                className="inline-block opacity-0 text-gradient-animated" 
+                style={{ 
+                  transformOrigin: "0 100%",
+                  animation: `cinematicReveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) ${0.3 + i * 0.08}s forwards, textShimmer 4s linear infinite`
+                }}
+              >
+                {char}
+              </span>
+            ))}
           </h1>
         </div>
 
         {/* Role */}
         <div
-          className="text-lg md:text-2xl text-neutral-300 font-mono tracking-wide opacity-0"
+          className="text-lg md:text-2xl text-neutral-400 font-mono tracking-wider opacity-0"
           style={{ animation: "fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.6s forwards" }}
         >
-          UI/UX Designer &bull; Graphic Designer &bull; Frontend Developer
+          Product Designer &bull; Frontend Engineer
         </div>
 
         {/* Tagline */}
         <div
-          className="mt-8 max-w-xl mx-auto opacity-0"
+          className="mt-8 max-w-2xl mx-auto opacity-0"
           style={{ animation: "fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.9s forwards" }}
         >
-          <p className="text-base md:text-lg text-neutral-300 font-medium">
-            I design intuitive digital experiences and write the code that brings them to life.
+          <p className="text-xl md:text-3xl text-neutral-200 font-medium tracking-tight">
+            Engineering elegant systems. Designing visceral experiences.
           </p>
         </div>
 

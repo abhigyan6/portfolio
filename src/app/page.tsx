@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import Overlay from "@/components/Overlay";
 import Preloader from "@/components/ui/Preloader";
 import CustomCursor from "@/components/ui/CustomCursor";
+import SpotlightGlow from "@/components/ui/SpotlightGlow";
 import SmoothScroll from "@/components/ui/SmoothScroll";
 
 // Dynamically import the 3D Scene to avoid SSR issues with Three.js
@@ -24,8 +25,9 @@ export default function Home() {
       {/* Preloader — disappears after loading */}
       {!loaded && <Preloader onComplete={handlePreloaderComplete} />}
 
-      {/* Custom cursor */}
+      {/* Custom cursor & Mouse Spotlight */}
       <CustomCursor />
+      <SpotlightGlow />
 
       {/* Smooth scroll wrapper */}
       <SmoothScroll>
