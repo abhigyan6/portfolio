@@ -21,6 +21,9 @@ export const metadata: Metadata = {
     title: "Abhigyan Dwivedi — Designer & Developer",
     description: "Elite Design Engineer bridging the gap between aesthetics and WebGL.",
   },
+  verification: {
+    google: "qDEsjLciZdZVndgpmNunOxDlv7JWPJpnc1AhVbmo5RU",
+  },
 };
 
 export default function RootLayout({
