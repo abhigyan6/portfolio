@@ -90,10 +90,11 @@ export default function Scene() {
         camera={{ position: [0, 0, 15], fov: 45 }}
         dpr={1}
         gl={{ antialias: false, alpha: false, powerPreference: "high-performance" }}
+        performance={{ min: 0.5 }}
       >
         <Suspense fallback={null}>
-          <Starfield count={1500} />
-          <FloatingLogos count={8} />
+          <Starfield count={tier === "high" ? 1500 : 300} />
+          <FloatingLogos count={tier === "high" ? 8 : 2} />
           <CameraRig />
           
           {/* Dynamic Render Branching: */}
